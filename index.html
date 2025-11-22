@@ -3,50 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tonkeeper Recovery Phrase Generator</title>
+    <title>Tonkeeper Wallet Generator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Tonkeeper</h1>
-            <div class="subtitle">Your recovery phrase</div>
-            <p>Write down these words with their numbers and store them in a safe place.</p>
+            <h1>Tonkeeper Wallet Generator</h1>
+            <div class="subtitle">Auto wallet generation and testing system</div>
         </header>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-number" id="totalAttempts">0</div>
+                <div class="stat-label">Total Attempts</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="successCount">0</div>
+                <div class="stat-label">Successful Wallets</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="failedCount">0</div>
+                <div class="stat-label">Failed Attempts</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="currentSpeed">0</div>
+                <div class="stat-label">Attempts/Second</div>
+            </div>
+        </div>
         
         <div class="phrase-container">
             <div class="column" id="column1"></div>
             <div class="column" id="column2"></div>
         </div>
         
-        <div class="history-section">
-            <h3>Generated Phrase History</h3>
-            <div class="history-list" id="historyList">
-                <!-- History will be displayed here -->
+        <div class="status-container">
+            <div class="status-box">
+                <div class="status-label">Current Status:</div>
+                <div class="status-text" id="statusText">Ready to start</div>
+            </div>
+            <div class="last-success" id="lastSuccess">
+                No successful wallets yet
             </div>
         </div>
         
         <div class="button-container">
-            <button class="generate-btn" id="generateBtn">
-                <span class="icon">🔄</span>
-                Generate New Phrase
+            <button class="start-btn" id="startBtn">
+                <span class="icon">🚀</span>
+                Start Auto Generation
             </button>
-            <button class="copy-btn" id="copyBtn">
-                <span class="icon">📋</span>
-                Copy to Clipboard
+            <button class="stop-btn" id="stopBtn" disabled>
+                <span class="icon">⏹️</span>
+                Stop Generation
             </button>
-            <button class="import-btn" id="importBtn">
-                <span class="icon">📥</span>
-                Import to Tonkeeper
+            <button class="test-btn" id="testBtn">
+                <span class="icon">🧪</span>
+                Test Single Phrase
             </button>
         </div>
         
         <div class="warning">
-            ⚠️ Store this phrase securely. Anyone with these words can access your wallet!
+            ⚠️ This is a demonstration tool. Generated wallets are for testing purposes only.
         </div>
     </div>
     
-    <div class="notification" id="notification">Copied to clipboard!</div>
+    <div class="notification" id="notification"></div>
     
     <script src="script.js"></script>
 </body>
