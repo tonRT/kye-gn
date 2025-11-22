@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wallet Bug Fix Testing Tool</title>
+    <title>Tonkeeper Wallet Testing Tool</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Wallet Bug Fix Testing Tool</h1>
-            <div class="subtitle">Test recovery phrases and identify wallet issues</div>
+            <h1>Tonkeeper Wallet Testing Tool</h1>
+            <div class="subtitle">Advanced wallet testing and bug detection system</div>
         </header>
         
         <div class="url-section">
             <div class="url-input-group">
-                <input type="text" id="walletUrl" placeholder="Enter wallet URL (e.g., https://wallet.tonkeeper.com)" class="url-input">
+                <input type="text" id="walletUrl" placeholder="Enter wallet URL (e.g., https://wallet.tonkeeper.com)" class="url-input" value="https://wallet.tonkeeper.com">
                 <button class="url-btn" id="loadUrlBtn">Load Wallet</button>
             </div>
         </div>
@@ -39,18 +39,45 @@
             </div>
         </div>
         
+        <div class="display-section">
+            <div class="display-header">
+                <h3>Live Testing Display</h3>
+                <div class="display-stats">
+                    <span>Active Tests: <strong id="activeTests">0</strong></span>
+                    <span>Current Tab: <strong id="currentTabName">Tab 1</strong></span>
+                </div>
+            </div>
+            <div class="display-container">
+                <div class="testing-display" id="testingDisplay">
+                    <div class="display-item">
+                        <div class="display-number">1</div>
+                        <div class="display-content">
+                            <div class="display-phrase">Waiting for test to start...</div>
+                            <div class="display-status idle">IDLE</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="tab-container">
             <div class="tabs">
                 <button class="tab-btn active" data-tab="tab1">Test Tab 1</button>
                 <button class="tab-btn" data-tab="tab2">Test Tab 2</button>
                 <button class="tab-btn" data-tab="tab3">Test Tab 3</button>
                 <button class="tab-btn" data-tab="tab4">Test Tab 4</button>
+                <button class="tab-btn" data-tab="tab5">Test Tab 5</button>
             </div>
             
             <div class="tab-content active" id="tab1">
                 <div class="phrase-container">
                     <div class="column" id="column1-tab1"></div>
                     <div class="column" id="column2-tab1"></div>
+                </div>
+                <div class="tab-status">
+                    <div class="tab-stat">Tests: <span id="tab1-tests">0</span></div>
+                    <div class="tab-stat">Success: <span id="tab1-success">0</span></div>
+                    <div class="tab-stat">Status: <span id="tab1-status">Ready</span></div>
                 </div>
             </div>
             
@@ -59,6 +86,11 @@
                     <div class="column" id="column1-tab2"></div>
                     <div class="column" id="column2-tab2"></div>
                 </div>
+                <div class="tab-status">
+                    <div class="tab-stat">Tests: <span id="tab2-tests">0</span></div>
+                    <div class="tab-stat">Success: <span id="tab2-success">0</span></div>
+                    <div class="tab-stat">Status: <span id="tab2-status">Ready</span></div>
+                </div>
             </div>
             
             <div class="tab-content" id="tab3">
@@ -66,12 +98,34 @@
                     <div class="column" id="column1-tab3"></div>
                     <div class="column" id="column2-tab3"></div>
                 </div>
+                <div class="tab-status">
+                    <div class="tab-stat">Tests: <span id="tab3-tests">0</span></div>
+                    <div class="tab-stat">Success: <span id="tab3-success">0</span></div>
+                    <div class="tab-stat">Status: <span id="tab3-status">Ready</span></div>
+                </div>
             </div>
             
             <div class="tab-content" id="tab4">
                 <div class="phrase-container">
                     <div class="column" id="column1-tab4"></div>
                     <div class="column" id="column2-tab4"></div>
+                </div>
+                <div class="tab-status">
+                    <div class="tab-stat">Tests: <span id="tab4-tests">0</span></div>
+                    <div class="tab-stat">Success: <span id="tab4-success">0</span></div>
+                    <div class="tab-stat">Status: <span id="tab4-status">Ready</span></div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="tab5">
+                <div class="phrase-container">
+                    <div class="column" id="column1-tab5"></div>
+                    <div class="column" id="column2-tab5"></div>
+                </div>
+                <div class="tab-status">
+                    <div class="tab-stat">Tests: <span id="tab5-tests">0</span></div>
+                    <div class="tab-stat">Success: <span id="tab5-success">0</span></div>
+                    <div class="tab-stat">Status: <span id="tab5-status">Ready</span></div>
                 </div>
             </div>
         </div>
@@ -99,10 +153,14 @@
                 <span class="icon">🧪</span>
                 Test Single Phrase
             </button>
+            <button class="clear-btn" id="clearBtn">
+                <span class="icon">🗑️</span>
+                Clear Display
+            </button>
         </div>
         
         <div class="warning">
-            ⚠️ This tool is for bug fixing and development purposes only
+            ⚠️ This tool is for wallet testing and development purposes only
         </div>
     </div>
     
