@@ -3,167 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tonkeeper Wallet Testing Tool</title>
+    <title>Smart AI Wallet Testing Tool</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Tonkeeper Wallet Testing Tool</h1>
-            <div class="subtitle">Advanced wallet testing and bug detection system</div>
-        </header>
-        
-        <div class="url-section">
-            <div class="url-input-group">
-                <input type="text" id="walletUrl" placeholder="Enter wallet URL (e.g., https://wallet.tonkeeper.com)" class="url-input" value="https://wallet.tonkeeper.com">
-                <button class="url-btn" id="loadUrlBtn">Load Wallet</button>
+            <div class="header-content">
+                <h1>🤖 Smart AI Wallet Testing Tool</h1>
+                <div class="subtitle">Advanced AI-powered wallet testing with smart pattern detection</div>
             </div>
-        </div>
-        
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="stat-number" id="totalAttempts">0</div>
-                <div class="stat-label">Total Tests</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-number" id="successCount">0</div>
-                <div class="stat-label">Successful</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-number" id="failedCount">0</div>
-                <div class="stat-label">Failed</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-number" id="currentSpeed">0</div>
-                <div class="stat-label">Tests/Second</div>
-            </div>
-        </div>
-        
-        <div class="display-section">
-            <div class="display-header">
-                <h3>Live Testing Display</h3>
-                <div class="display-stats">
-                    <span>Active Tests: <strong id="activeTests">0</strong></span>
-                    <span>Current Tab: <strong id="currentTabName">Tab 1</strong></span>
+            <div class="ai-status">
+                <div class="ai-indicator">
+                    <span class="ai-pulse"></span>
+                    AI ACTIVE
                 </div>
             </div>
-            <div class="display-container">
-                <div class="testing-display" id="testingDisplay">
-                    <div class="display-item">
-                        <div class="display-number">1</div>
-                        <div class="display-content">
-                            <div class="display-phrase">Waiting for test to start...</div>
-                            <div class="display-status idle">IDLE</div>
+        </header>
+
+        <div class="main-layout">
+            <!-- Left Panel - Controls -->
+            <div class="control-panel">
+                <div class="url-section">
+                    <div class="section-title">
+                        <span class="icon">🌐</span>
+                        Target Website
+                    </div>
+                    <div class="url-input-group">
+                        <input type="text" id="walletUrl" placeholder="https://wallet.tonkeeper.com" class="url-input" value="https://wallet.tonkeeper.com">
+                        <button class="url-btn" id="loadUrlBtn">
+                            <span class="icon">🚀</span>
+                            Connect
+                        </button>
+                    </div>
+                </div>
+
+                <div class="testing-config">
+                    <div class="section-title">
+                        <span class="icon">⚡</span>
+                        Testing Configuration
+                    </div>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label>Tests per Minute</label>
+                            <input type="number" id="testsPerMinute" value="3000" min="100" max="10000">
+                        </div>
+                        <div class="config-item">
+                            <label>Smart Retry Delay</label>
+                            <input type="number" id="retryDelay" value="2" min="1" max="10" step="1">
+                        </div>
+                        <div class="config-item">
+                            <label>AI Pattern Level</label>
+                            <select id="aiLevel">
+                                <option value="smart">Smart (Recommended)</option>
+                                <option value="aggressive">Aggressive</option>
+                                <option value="conservative">Conservative</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="start-btn" id="startBtn">
+                        <span class="icon">🎯</span>
+                        Start Smart Testing
+                    </button>
+                    <button class="stop-btn" id="stopBtn" disabled>
+                        <span class="icon">⏹️</span>
+                        Stop Testing
+                    </button>
+                    <button class="smart-btn" id="smartBtn">
+                        <span class="icon">🧠</span>
+                        AI Analysis
+                    </button>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="successRate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgTime">0ms</div>
+                        <div class="stat-label">Avg Response</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="aiScore">0</div>
+                        <div class="stat-label">AI Score</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Display -->
+            <div class="display-panel">
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalAttempts">0</div>
+                        <div class="stat-label">Total Tests</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="successCount">0</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="failedCount">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="currentSpeed">0</div>
+                        <div class="stat-label">Tests/Sec</div>
+                    </div>
+                </div>
+
+                <div class="live-display">
+                    <div class="display-header">
+                        <h3>🧪 Live Testing Activity</h3>
+                        <div class="display-controls">
+                            <button class="clear-btn" id="clearBtn">
+                                <span class="icon">🗑️</span>
+                                Clear
+                            </button>
+                            <div class="active-indicator">
+                                <span class="dot"></span>
+                                Active Tests: <strong id="activeTests">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="display-container">
+                        <div class="testing-display" id="testingDisplay">
+                            <div class="display-item system">
+                                <div class="display-content">
+                                    <div class="display-message">🤖 AI System Ready - Configure settings and start testing</div>
+                                    <div class="display-status">READY</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="smart-features">
+                    <div class="feature-tabs">
+                        <button class="feature-tab active" data-tab="patterns">Pattern Analysis</button>
+                        <button class="feature-tab" data-tab="results">Test Results</button>
+                        <button class="feature-tab" data-tab="logs">AI Logs</button>
+                    </div>
+                    
+                    <div class="feature-content active" id="patterns">
+                        <div class="pattern-analysis">
+                            <div class="pattern-item">
+                                <div class="pattern-name">Word Frequency</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="pattern-value">65%</div>
+                            </div>
+                            <div class="pattern-item">
+                                <div class="pattern-name">Sequence Detection</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 42%"></div>
+                                </div>
+                                <div class="pattern-value">42%</div>
+                            </div>
+                            <div class="pattern-item">
+                                <div class="pattern-name">Pattern Recognition</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 78%"></div>
+                                </div>
+                                <div class="pattern-value">78%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-content" id="results">
+                        <div class="results-grid">
+                            <div class="result-card success">
+                                <div class="result-title">Valid Wallets</div>
+                                <div class="result-count" id="validWallets">0</div>
+                            </div>
+                            <div class="result-card testing">
+                                <div class="result-title">In Progress</div>
+                                <div class="result-count" id="inProgress">0</div>
+                            </div>
+                            <div class="result-card failed">
+                                <div class="result-title">Failed Tests</div>
+                                <div class="result-count" id="failedTests">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="feature-content" id="logs">
+                        <div class="log-container">
+                            <div class="log-entry ai">
+                                <span class="log-time">12:00:01</span>
+                                <span class="log-message">AI System initialized with smart pattern detection</span>
+                            </div>
+                            <div class="log-entry system">
+                                <span class="log-time">12:00:02</span>
+                                <span class="log-message">Ready to start testing - Configure target website</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="tab-container">
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="tab1">Test Tab 1</button>
-                <button class="tab-btn" data-tab="tab2">Test Tab 2</button>
-                <button class="tab-btn" data-tab="tab3">Test Tab 3</button>
-                <button class="tab-btn" data-tab="tab4">Test Tab 4</button>
-                <button class="tab-btn" data-tab="tab5">Test Tab 5</button>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label">AI Status:</span>
+                <span class="status-value" id="aiStatus">Analyzing patterns...</span>
             </div>
-            
-            <div class="tab-content active" id="tab1">
-                <div class="phrase-container">
-                    <div class="column" id="column1-tab1"></div>
-                    <div class="column" id="column2-tab1"></div>
-                </div>
-                <div class="tab-status">
-                    <div class="tab-stat">Tests: <span id="tab1-tests">0</span></div>
-                    <div class="tab-stat">Success: <span id="tab1-success">0</span></div>
-                    <div class="tab-stat">Status: <span id="tab1-status">Ready</span></div>
-                </div>
+            <div class="status-item">
+                <span class="status-label">Current Action:</span>
+                <span class="status-value" id="currentAction">Ready</span>
             </div>
-            
-            <div class="tab-content" id="tab2">
-                <div class="phrase-container">
-                    <div class="column" id="column1-tab2"></div>
-                    <div class="column" id="column2-tab2"></div>
-                </div>
-                <div class="tab-status">
-                    <div class="tab-stat">Tests: <span id="tab2-tests">0</span></div>
-                    <div class="tab-stat">Success: <span id="tab2-success">0</span></div>
-                    <div class="tab-stat">Status: <span id="tab2-status">Ready</span></div>
-                </div>
+            <div class="status-item">
+                <span class="status-label">Last Success:</span>
+                <span class="status-value" id="lastSuccess">None</span>
             </div>
-            
-            <div class="tab-content" id="tab3">
-                <div class="phrase-container">
-                    <div class="column" id="column1-tab3"></div>
-                    <div class="column" id="column2-tab3"></div>
-                </div>
-                <div class="tab-status">
-                    <div class="tab-stat">Tests: <span id="tab3-tests">0</span></div>
-                    <div class="tab-stat">Success: <span id="tab3-success">0</span></div>
-                    <div class="tab-stat">Status: <span id="tab3-status">Ready</span></div>
-                </div>
+            <div class="status-item">
+                <span class="status-label">Telegram:</span>
+                <span class="status-value" id="telegramStatus">Connected</span>
             </div>
-            
-            <div class="tab-content" id="tab4">
-                <div class="phrase-container">
-                    <div class="column" id="column1-tab4"></div>
-                    <div class="column" id="column2-tab4"></div>
-                </div>
-                <div class="tab-status">
-                    <div class="tab-stat">Tests: <span id="tab4-tests">0</span></div>
-                    <div class="tab-stat">Success: <span id="tab4-success">0</span></div>
-                    <div class="tab-stat">Status: <span id="tab4-status">Ready</span></div>
-                </div>
-            </div>
-            
-            <div class="tab-content" id="tab5">
-                <div class="phrase-container">
-                    <div class="column" id="column1-tab5"></div>
-                    <div class="column" id="column2-tab5"></div>
-                </div>
-                <div class="tab-status">
-                    <div class="tab-stat">Tests: <span id="tab5-tests">0</span></div>
-                    <div class="tab-stat">Success: <span id="tab5-success">0</span></div>
-                    <div class="tab-stat">Status: <span id="tab5-status">Ready</span></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="status-container">
-            <div class="status-box">
-                <div class="status-label">Current Status:</div>
-                <div class="status-text" id="statusText">Ready to start testing</div>
-            </div>
-            <div class="last-success" id="lastSuccess">
-                No successful tests yet
-            </div>
-        </div>
-        
-        <div class="button-container">
-            <button class="start-btn" id="startBtn">
-                <span class="icon">🚀</span>
-                Start Auto Testing
-            </button>
-            <button class="stop-btn" id="stopBtn" disabled>
-                <span class="icon">⏹️</span>
-                Stop Testing
-            </button>
-            <button class="test-btn" id="testBtn">
-                <span class="icon">🧪</span>
-                Test Single Phrase
-            </button>
-            <button class="clear-btn" id="clearBtn">
-                <span class="icon">🗑️</span>
-                Clear Display
-            </button>
-        </div>
-        
-        <div class="warning">
-            ⚠️ This tool is for wallet testing and development purposes only
         </div>
     </div>
-    
+
     <div class="notification" id="notification"></div>
     
     <script src="script.js"></script>
