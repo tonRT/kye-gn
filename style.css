@@ -250,7 +250,6 @@ button:disabled {
     opacity: 1;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .phrase-container {
         grid-template-columns: 1fr;
