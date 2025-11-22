@@ -3,47 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TON Wallet Manager</title>
+    <title>TON Blockchain Education - Secure Wallet Guide</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>TON Wallet</h1>
-            <p>Secure cryptocurrency wallet management</p>
-        </header>
-
-        <div class="wallet-options">
-            <div class="option-card">
-                <h3>➕ New Wallet</h3>
-                <p>Create a new secure wallet</p>
-                <button onclick="createNewWallet()">Create</button>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="logo">TON Edu</h1>
+                <ul class="nav-menu">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About TON</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#wallet">Wallets</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
             </div>
+        </nav>
+    </header>
 
-            <div class="option-card">
-                <h3>📥 Import Wallet</h3>
-                <p>Import with recovery phrase</p>
-                <button onclick="showImportSection()">Import</button>
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>TON Blockchain Education Platform</h1>
+                <p>Learn about The Open Network blockchain and secure wallet practices</p>
+                <button class="cta-button" id="learnMoreBtn">Start Learning</button>
             </div>
-        </div>
+        </section>
 
-        <div id="importSection" class="import-section hidden">
-            <h3>Import Wallet with Recovery Phrase</h3>
-            <div class="word-grid">
-                <!-- 24 word inputs will be generated here -->
+        <section id="about" class="info-section">
+            <div class="container">
+                <h2>About TON Blockchain</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h3>What is TON?</h3>
+                        <p>The Open Network (TON) is a decentralized blockchain designed to handle millions of transactions quickly and securely.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Key Features</h3>
+                        <p>Fast transactions, low fees, and scalable architecture make TON ideal for mass adoption.</p>
+                    </div>
+                    <div class="info-card">
+                        <h3>Use Cases</h3>
+                        <p>Payments, decentralized apps, NFTs, and secure digital asset storage.</p>
+                    </div>
+                </div>
             </div>
-            <button onclick="importWallet()" class="import-btn">Import Wallet</button>
-        </div>
+        </section>
 
-        <div id="walletInfo" class="wallet-info hidden">
-            <h3>Wallet Status</h3>
-            <div id="statusMessage"></div>
-        </div>
+        <section id="security" class="security-section">
+            <div class="container">
+                <h2>Wallet Security Best Practices</h2>
+                <div class="security-list">
+                    <div class="security-item">
+                        <span class="number">1</span>
+                        <div class="content">
+                            <h3>Use Official Wallets</h3>
+                            <p>Only download wallets from official sources like app stores or verified websites.</p>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <span class="number">2</span>
+                        <div class="content">
+                            <h3>Secure Your Seed Phrase</h3>
+                            <p>Never share your recovery phrase and store it in a safe, offline location.</p>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <span class="number">3</span>
+                        <div class="content">
+                            <h3>Enable 2FA</h3>
+                            <p>Use two-factor authentication for additional security layers.</p>
+                        </div>
+                    </div>
+                    <div class="security-item">
+                        <span class="number">4</span>
+                        <div class="content">
+                            <h3>Verify Transactions</h3>
+                            <p>Always double-check addresses and amounts before confirming transactions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <footer>
-            <p>For educational purposes only | Secure your recovery phrase</p>
-        </footer>
-    </div>
+        <section id="wallet" class="wallet-section">
+            <div class="container">
+                <h2>Popular TON Wallets</h2>
+                <div class="wallet-grid">
+                    <div class="wallet-card">
+                        <h3>Tonkeeper</h3>
+                        <p>User-friendly mobile wallet with great features</p>
+                        <a href="https://tonkeeper.com" target="_blank" class="wallet-link">Official Website</a>
+                    </div>
+                    <div class="wallet-card">
+                        <h3>MyTonWallet</h3>
+                        <p>Web-based wallet for easy access</p>
+                        <a href="https://mytonwallet.com" target="_blank" class="wallet-link">Official Website</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2>Get in Touch</h2>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 TON Education Platform. Educational purpose only.</p>
+            <p class="disclaimer">This is an educational website about blockchain security. Always verify official sources.</p>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
