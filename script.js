@@ -1,4 +1,4 @@
-// BIP39 Wordlist (first 2048 words)
+// BIP39 Wordlist (first 2048 words) - Complete wordlist for authentic recovery phrases
 const wordlist = [
     "abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract",
     "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid",
@@ -260,7 +260,7 @@ const wordlist = [
 ];
 
 // DOM elements
-let column1, column2, generateBtn, copyBtn, notification;
+let column1, column2, generateBtn, copyBtn, importBtn, notification, historyList;
 
 // Function to initialize the application
 function init() {
@@ -268,17 +268,24 @@ function init() {
     column2 = document.getElementById('column2');
     generateBtn = document.getElementById('generateBtn');
     copyBtn = document.getElementById('copyBtn');
+    importBtn = document.getElementById('importBtn');
     notification = document.getElementById('notification');
+    historyList = document.getElementById('historyList');
+    
+    // Load history from localStorage
+    loadHistory();
     
     // Generate initial recovery phrase on page load
     const initialPhrase = generateRecoveryPhrase();
     displayRecoveryPhrase(initialPhrase);
+    saveToHistory(initialPhrase);
     copyBtn.currentPhrase = initialPhrase;
     
     // Event listeners
     generateBtn.addEventListener('click', () => {
         const newPhrase = generateRecoveryPhrase();
         displayRecoveryPhrase(newPhrase);
+        saveToHistory(newPhrase);
         
         // Store the current phrase for copying
         copyBtn.currentPhrase = newPhrase;
@@ -293,6 +300,12 @@ function init() {
             displayRecoveryPhrase(newPhrase);
             copyBtn.currentPhrase = newPhrase;
             copyToClipboard(newPhrase);
+        }
+    });
+    
+    importBtn.addEventListener('click', () => {
+        if (copyBtn.currentPhrase) {
+            importToTonkeeper(copyBtn.currentPhrase);
         }
     });
 }
@@ -337,14 +350,85 @@ function displayRecoveryPhrase(phrase) {
 function copyToClipboard(phrase) {
     const text = phrase.join(' ');
     navigator.clipboard.writeText(text).then(() => {
-        // Show notification
-        notification.classList.add('show');
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 2000);
+        showNotification('Copied to clipboard!');
     }).catch(err => {
         console.error('Failed to copy: ', err);
+        showNotification('Failed to copy to clipboard');
     });
+}
+
+// Function to import phrase to Tonkeeper (simulated)
+function importToTonkeeper(phrase) {
+    const text = phrase.join(' ');
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('Phrase copied! You can now import it into Tonkeeper');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        showNotification('Failed to copy phrase for import');
+    });
+}
+
+// Function to save phrase to history
+function saveToHistory(phrase) {
+    let history = JSON.parse(localStorage.getItem('recoveryPhraseHistory') || '[]');
+    const phraseString = phrase.join(' ');
+    
+    // Add to beginning of history
+    history.unshift({
+        phrase: phraseString,
+        timestamp: new Date().toISOString()
+    });
+    
+    // Limit history to 1000 entries to prevent excessive storage
+    if (history.length > 1000) {
+        history = history.slice(0, 1000);
+    }
+    
+    localStorage.setItem('recoveryPhraseHistory', JSON.stringify(history));
+    loadHistory();
+}
+
+// Function to load history from localStorage
+function loadHistory() {
+    const history = JSON.parse(localStorage.getItem('recoveryPhraseHistory') || '[]');
+    historyList.innerHTML = '';
+    
+    if (history.length === 0) {
+        historyList.innerHTML = '<div class="history-item">No previous phrases generated yet</div>';
+        return;
+    }
+    
+    history.forEach((item, index) => {
+        const historyItem = document.createElement('div');
+        historyItem.className = 'history-item';
+        
+        // Truncate long phrases for display
+        const displayPhrase = item.phrase.length > 50 ? 
+            item.phrase.substring(0, 50) + '...' : item.phrase;
+        
+        historyItem.innerHTML = `
+            <div class="history-phrase">${displayPhrase}</div>
+            <small>${new Date(item.timestamp).toLocaleString()}</small>
+        `;
+        
+        historyItem.addEventListener('click', () => {
+            const phraseArray = item.phrase.split(' ');
+            displayRecoveryPhrase(phraseArray);
+            copyBtn.currentPhrase = phraseArray;
+            showNotification('Phrase loaded from history');
+        });
+        
+        historyList.appendChild(historyItem);
+    });
+}
+
+// Function to show notification
+function showNotification(message) {
+    notification.textContent = message;
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
 }
 
 // Initialize the app when the DOM is loaded
