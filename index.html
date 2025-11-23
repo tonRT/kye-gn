@@ -3,131 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Security Education - Learning Platform</title>
+    <title>Smart AI Wallet Attack Tool - Tonkeeper Demo</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="nav-container">
-                <h1 class="logo">CryptoSec Edu</h1>
-                <ul class="nav-menu">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#security">Security</a></li>
-                    <li><a href="#education">Education</a></li>
-                    <li><a href="#tools">Tools</a></li>
-                </ul>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>⚡ Smart AI Attack System</h1>
+                <div class="subtitle">Tonkeeper Demo - Advanced Wallet Security Testing</div>
             </div>
-        </nav>
-    </header>
-
-    <main>
-        <section id="home" class="hero">
-            <div class="hero-content">
-                <h1>Cryptocurrency Security Education</h1>
-                <p>Learn how to protect your digital assets with proper security practices</p>
-                <div class="warning-banner">
-                    <strong>Educational Purpose Only:</strong> This site demonstrates security concepts for learning.
+            <div class="attack-status">
+                <div class="status-indicator">
+                    <span class="pulse"></span>
+                    TONKEEPER DEMO MODE
                 </div>
             </div>
-        </section>
+        </header>
 
-        <section id="security" class="security-section">
-            <div class="container">
-                <h2>Wallet Security Fundamentals</h2>
-                <div class="security-grid">
-                    <div class="security-card">
-                        <h3>Seed Phrase Protection</h3>
-                        <p>Your 24-word seed phrase is the master key to your wallet. Never share it with anyone.</p>
-                        <ul>
-                            <li>Store offline in secure location</li>
-                            <li>Never digitalize or photograph</li>
-                            <li>Use metal backup solutions</li>
-                        </ul>
+        <div class="main-layout">
+            <!-- Left Panel - Attack Configuration -->
+            <div class="config-panel">
+                <div class="target-section">
+                    <div class="section-title">
+                        <span class="icon">🎯</span>
+                        Target Configuration
                     </div>
-                    <div class="security-card">
-                        <h3>Phishing Protection</h3>
-                        <p>Recognize and avoid phishing attempts targeting your cryptocurrency.</p>
-                        <ul>
-                            <li>Verify website URLs carefully</li>
-                            <li>Use bookmark for official sites</li>
-                            <li>Enable 2FA when available</li>
-                        </ul>
-                    </div>
-                    <div class="security-card">
-                        <h3>Hardware Wallets</h3>
-                        <p>Use hardware wallets for significant cryptocurrency holdings.</p>
-                        <ul>
-                            <li>Private keys never leave device</li>
-                            <li>Physical confirmation required</li>
-                            <li>Immune to computer malware</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="education" class="education-section">
-            <div class="container">
-                <h2>Security Education Center</h2>
-                <div class="education-content">
-                    <div class="demo-area">
-                        <h3>Security Demonstration</h3>
-                        <div class="wallet-demo">
-                            <div class="input-group">
-                                <label>Example Seed Phrase (Educational):</label>
-                                <textarea id="demoSeed" readonly>word1 word2 word3 ... word24</textarea>
-                                <small>Never enter real seed phrases on educational websites</small>
-                            </div>
-                            <button id="securityCheck" class="demo-btn">Run Security Check</button>
-                            <div id="securityResult" class="result-box"></div>
+                    <div class="target-display">
+                        <div class="target-url">
+                            <strong>Current Target:</strong>
+                            <span class="url-text">https://wallet.tonkeeper.com/</span>
                         </div>
+                        <div class="target-info">
+                            <span class="icon">🔒</span>
+                            Tonkeeper Wallet Demo
+                        </div>
+                    </div>
+                </div>
+
+                <div class="attack-config">
+                    <div class="section-title">
+                        <span class="icon">⚙️</span>
+                        Attack Parameters
+                    </div>
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label>Attack Speed</label>
+                            <select id="attackSpeed">
+                                <option value="1000">Slow (1,000/min)</option>
+                                <option value="3000" selected>Medium (3,000/min)</option>
+                                <option value="5000">Fast (5,000/min)</option>
+                                <option value="10000">Turbo (10,000/min)</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label>AI Intelligence</label>
+                            <select id="aiIntelligence">
+                                <option value="basic">Basic Pattern</option>
+                                <option value="smart" selected>Smart AI</option>
+                                <option value="advanced">Advanced AI</option>
+                                <option value="quantum">Quantum AI</option>
+                            </select>
+                        </div>
+                        <div class="config-item">
+                            <label>Demo Mode</label>
+                            <select id="demoMode">
+                                <option value="realistic" selected>Realistic Simulation</option>
+                                <option value="training">Training Mode</option>
+                                <option value="aggressive">Aggressive Demo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <div class="section-title">
+                        <span class="icon">🚀</span>
+                        Attack Controls
+                    </div>
+                    <div class="control-buttons">
+                        <button class="attack-btn" id="startAttack">
+                            <span class="icon">🎯</span>
+                            START TONKEEPER ATTACK
+                        </button>
+                        <button class="stop-btn" id="stopAttack" disabled>
+                            <span class="icon">⏹️</span>
+                            STOP ATTACK
+                        </button>
+                        <button class="smart-btn" id="analyzeBtn">
+                            <span class="icon">🔍</span>
+                            AI ANALYSIS
+                        </button>
+                    </div>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="successRate">0%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completion">0%</div>
+                        <div class="stat-label">Completion</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="aiEfficiency">85</div>
+                        <div class="stat-label">AI Efficiency</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Attack Monitor -->
+            <div class="monitor-panel">
+                <div class="attack-stats">
+                    <div class="stat-box">
+                        <div class="stat-number" id="totalAttempts">0</div>
+                        <div class="stat-label">Total Attacks</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="successCount">0</div>
+                        <div class="stat-label">Successful</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="failedCount">0</div>
+                        <div class="stat-label">Failed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="currentSpeed">0</div>
+                        <div class="stat-label">Attacks/Sec</div>
+                    </div>
+                </div>
+
+                <div class="live-monitor">
+                    <div class="monitor-header">
+                        <h3>📡 Live Attack Monitor - Tonkeeper Demo</h3>
+                        <div class="monitor-controls">
+                            <button class="clear-btn" id="clearMonitor">
+                                <span class="icon">🗑️</span>
+                                Clear Log
+                            </button>
+                            <div class="active-attacks">
+                                <span class="dot"></span>
+                                Active: <strong id="activeAttacks">0</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="monitor-container">
+                        <div class="attack-log" id="attackLog">
+                            <div class="log-entry system">
+                                <span class="log-time">12:00:00</span>
+                                <span class="log-message">🛡️ Tonkeeper Demo System Initialized - Ready for attack simulation</span>
+                            </div>
+                            <div class="log-entry system">
+                                <span class="log-time">12:00:01</span>
+                                <span class="log-message">🎯 Target: https://wallet.tonkeeper.com/ - Demo Mode Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-panel">
+                    <div class="results-tabs">
+                        <button class="result-tab active" data-tab="success">Successful Attacks</button>
+                        <button class="result-tab" data-tab="patterns">Attack Patterns</button>
+                        <button class="result-tab" data-tab="telegram">Telegram Reports</button>
                     </div>
                     
-                    <div class="word-database">
-                        <h3>Common Word Database (Educational)</h3>
-                        <div class="search-box">
-                            <input type="text" id="wordSearch" placeholder="Search educational word list...">
-                            <button id="searchBtn">Search</button>
-                        </div>
-                        <div id="wordList" class="word-list"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tools" class="tools-section">
-            <div class="container">
-                <h2>Educational Security Tools</h2>
-                <div class="tools-grid">
-                    <div class="tool-card">
-                        <h3>Password Strength Tester</h3>
-                        <input type="password" id="passwordInput" placeholder="Test password strength">
-                        <div id="passwordStrength" class="strength-meter"></div>
-                    </div>
-                    <div class="tool-card">
-                        <h3>Security Quiz</h3>
-                        <div id="quizArea">
-                            <p>Test your cryptocurrency security knowledge</p>
-                            <button id="startQuiz" class="quiz-btn">Start Quiz</button>
+                    <div class="results-content active" id="success">
+                        <div class="success-list" id="successList">
+                            <div class="no-results">No successful attacks yet</div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-    </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p><strong>Educational Purpose Only</strong></p>
-                <p>This website is for educational demonstrations of cryptocurrency security concepts.</p>
-                <p>Never share real seed phrases or private keys on any website.</p>
-                <p class="disclaimer">Always verify official sources and use hardware wallets for significant holdings.</p>
+                    <div class="results-content" id="patterns">
+                        <div class="pattern-analysis">
+                            <div class="pattern-item">
+                                <div class="pattern-name">Tonkeeper Word Frequency</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="pattern-value">65%</div>
+                            </div>
+                            <div class="pattern-item">
+                                <div class="pattern-name">Sequence Detection</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 78%"></div>
+                                </div>
+                                <div class="pattern-value">78%</div>
+                            </div>
+                            <div class="pattern-item">
+                                <div class="pattern-name">Pattern Recognition</div>
+                                <div class="pattern-bar">
+                                    <div class="pattern-fill" style="width: 82%"></div>
+                                </div>
+                                <div class="pattern-value">82%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="results-content" id="telegram">
+                        <div class="telegram-reports" id="telegramReports">
+                            <div class="report-item">
+                                <div class="report-time">12:00:01</div>
+                                <div class="report-message">Telegram system ready - Demo reports will appear here</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer>
 
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-label">Target:</span>
+                <span class="status-value" id="currentTarget">https://wallet.tonkeeper.com/</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Attack Status:</span>
+                <span class="status-value" id="attackStatus">Ready</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Last Success:</span>
+                <span class="status-value" id="lastSuccess">Never</span>
+            </div>
+            <div class="status-item">
+                <span class="status-label">Telegram:</span>
+                <span class="status-value" id="telegramStatus">Demo Mode</span>
+            </div>
+        </div>
+
+        <div class="demo-notice">
+            <div class="notice-content">
+                <span class="icon">🔒</span>
+                <strong>DEMO MODE:</strong> This is a simulation tool for educational purposes only.
+                All attacks are simulated and no real wallets are being accessed.
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+    
     <script src="script.js"></script>
 </body>
 </html>
