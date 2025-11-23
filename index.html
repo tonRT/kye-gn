@@ -1,68 +1,77 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ক্রিপ্টো প্রাইস চেকার</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Price Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="app">
-        <header>
-            <h1>ক্রিপ্টো প্রাইস চেকার</h1>
-            <p class="subtitle">CoinGecko API দিয়ে লাইভ প্রাইস, ২৪ঘন্টার চেঞ্জ ও ছোট চার্ট দেখুন</p>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-coins"></i> Crypto Price Tracker</h1>
+            <p>Real-time cryptocurrency prices and analysis</p>
         </header>
 
-        <main>
-            <div class="controls">
-                <label for="coinSelect">পছন্দের কয়েন বাছুন / লিখুন:</label>
-                <div class="input-row">
-                    <input id="coinInput" list="coinList" placeholder="bitcoin, ethereum, solana ইত্যাদি" />
-                    <datalist id="coinList">
-                        <option value="bitcoin"></option>
-                        <option value="ethereum"></option>
-                        <option value="binancecoin"></option>
-                        <option value="ripple"></option>
-                        <option value="solana"></option>
-                        <option value="cardano"></option>
-                        <option value="dogecoin"></option>
-                        <option value="litecoin"></option>
-                        <option value="polkadot"></option>
-                    </datalist>
-                    <button id="checkBtn">চেক করুন</button>
-                </div>
-
-                <div class="hint">নোট: Pro API ব্যবহার করলে API KEY নিচে `script.js`-এ বসান।</div>
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search cryptocurrency (e.g., bitcoin, ethereum)">
+                <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
             </div>
+            <button id="analyzeBtn" class="analyze-btn">
+                <i class="fas fa-chart-line"></i> Auto Analyze Top Coins
+            </button>
+        </div>
 
-            <section id="output" class="output hidden">
-                <div class="card summary">
-                    <div class="left">
-                        <h2 id="coinName">—</h2>
-                        <div id="price" class="price">—</div>
-                        <div id="change" class="change">—</div>
+        <div class="results-section">
+            <!-- Single Coin Result -->
+            <div id="priceResult" class="price-result hidden">
+                <h2>Price Information</h2>
+                <div class="price-card">
+                    <div class="coin-header">
+                        <img id="coinImage" src="" alt="" class="coin-image">
+                        <div>
+                            <h3 id="coinName"></h3>
+                            <span id="coinSymbol" class="coin-symbol"></span>
+                        </div>
                     </div>
-                    <div class="right">
-                        <div class="meta">
-                            <div>মার্কেট ক্যাপ<br><strong id="marketCap">—</strong></div>
-                            <div>ভলিউম (24h)<br><strong id="volume">—</strong></div>
+                    <div class="price-info">
+                        <div class="price-item">
+                            <span class="label">Current Price:</span>
+                            <span id="currentPrice" class="price"></span>
+                        </div>
+                        <div class="price-item">
+                            <span class="label">24h Change:</span>
+                            <span id="priceChange" class="change"></span>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="card chart-card">
-                    <canvas id="sparkline" width="600" height="120"></canvas>
+            <!-- Market Analysis Result -->
+            <div id="marketAnalysis" class="market-analysis hidden">
+                <h2>Market Analysis & Next Big Movers</h2>
+                <div class="analysis-controls">
+                    <button id="refreshAnalysis" class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh Analysis
+                    </button>
                 </div>
+                <div class="coins-grid" id="coinsGrid">
+                    <!-- Coins will be dynamically added here -->
+                </div>
+            </div>
+        </div>
 
-                <div id="messages" class="messages"></div>
-            </section>
+        <div class="loading hidden" id="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Loading data...</span>
+        </div>
 
-            <div id="loader" class="loader hidden">লোড হচ্ছে…</div>
-        </main>
-
-        <footer>
-            <small>ডেভ: তোমার নাম • CoinGecko API ব্যবহার</small>
-        </footer>
+        <div class="error hidden" id="error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorMessage"></span>
+        </div>
     </div>
 
     <script src="script.js"></script>
