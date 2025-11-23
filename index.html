@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Master - Vocabulary Learning Platform</title>
+    <title>Crypto Security Education - Learning Platform</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <nav class="navbar">
             <div class="nav-container">
-                <h1 class="logo">WordMaster</h1>
+                <h1 class="logo">CryptoSec Edu</h1>
                 <ul class="nav-menu">
                     <li><a href="#home">Home</a></li>
-                    <li><a href="#words">Vocabulary</a></li>
-                    <li><a href="#telegram">Telegram Bot</a></li>
-                    <li><a href="#stats">Statistics</a></li>
+                    <li><a href="#security">Security</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#tools">Tools</a></li>
                 </ul>
             </div>
         </nav>
@@ -24,86 +24,94 @@
     <main>
         <section id="home" class="hero">
             <div class="hero-content">
-                <h1>Master English Vocabulary</h1>
-                <p>Learn 6000+ essential English words with our interactive platform</p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <span id="totalWords">6000+</span>
-                        <p>Words Available</p>
-                    </div>
-                    <div class="stat">
-                        <span id="learnedWords">0</span>
-                        <p>Words Learned</p>
-                    </div>
-                </div>
-                <button class="cta-button" id="startLearning">Start Learning Now</button>
-            </div>
-        </section>
-
-        <section id="words" class="words-section">
-            <div class="container">
-                <h2>Vocabulary Database</h2>
-                <div class="search-box">
-                    <input type="text" id="wordSearch" placeholder="Search words...">
-                    <button id="searchBtn">Search</button>
-                </div>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">All Words</button>
-                    <button class="filter-btn" data-filter="common">Common</button>
-                    <button class="filter-btn" data-filter="advanced">Advanced</button>
-                </div>
-                <div class="words-container">
-                    <div id="wordsList" class="words-grid"></div>
-                    <div class="pagination">
-                        <button id="prevPage">Previous</button>
-                        <span id="pageInfo">Page 1 of 60</span>
-                        <button id="nextPage">Next</button>
-                    </div>
+                <h1>Cryptocurrency Security Education</h1>
+                <p>Learn how to protect your digital assets with proper security practices</p>
+                <div class="warning-banner">
+                    <strong>Educational Purpose Only:</strong> This site demonstrates security concepts for learning.
                 </div>
             </div>
         </section>
 
-        <section id="telegram" class="telegram-section">
+        <section id="security" class="security-section">
             <div class="container">
-                <h2>Telegram Integration</h2>
-                <div class="telegram-card">
-                    <h3>Get Daily Words on Telegram</h3>
-                    <p>Receive 10 new words every day directly to your Telegram</p>
-                    
-                    <div class="telegram-form">
-                        <input type="text" id="telegramChatId" placeholder="Your Telegram Chat ID">
-                        <button id="connectTelegram">Connect Telegram</button>
+                <h2>Wallet Security Fundamentals</h2>
+                <div class="security-grid">
+                    <div class="security-card">
+                        <h3>Seed Phrase Protection</h3>
+                        <p>Your 24-word seed phrase is the master key to your wallet. Never share it with anyone.</p>
+                        <ul>
+                            <li>Store offline in secure location</li>
+                            <li>Never digitalize or photograph</li>
+                            <li>Use metal backup solutions</li>
+                        </ul>
                     </div>
-                    
-                    <div class="telegram-test">
-                        <button id="testMessage">Send Test Message</button>
-                        <button id="sendDailyWords">Send Daily Words</button>
+                    <div class="security-card">
+                        <h3>Phishing Protection</h3>
+                        <p>Recognize and avoid phishing attempts targeting your cryptocurrency.</p>
+                        <ul>
+                            <li>Verify website URLs carefully</li>
+                            <li>Use bookmark for official sites</li>
+                            <li>Enable 2FA when available</li>
+                        </ul>
                     </div>
-                    
-                    <div id="telegramStatus" class="status-message"></div>
+                    <div class="security-card">
+                        <h3>Hardware Wallets</h3>
+                        <p>Use hardware wallets for significant cryptocurrency holdings.</p>
+                        <ul>
+                            <li>Private keys never leave device</li>
+                            <li>Physical confirmation required</li>
+                            <li>Immune to computer malware</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="stats" class="stats-section">
+        <section id="education" class="education-section">
             <div class="container">
-                <h2>Learning Statistics</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Words Mastered</h3>
-                        <div class="stat-number" id="masteredCount">0</div>
+                <h2>Security Education Center</h2>
+                <div class="education-content">
+                    <div class="demo-area">
+                        <h3>Security Demonstration</h3>
+                        <div class="wallet-demo">
+                            <div class="input-group">
+                                <label>Example Seed Phrase (Educational):</label>
+                                <textarea id="demoSeed" readonly>word1 word2 word3 ... word24</textarea>
+                                <small>Never enter real seed phrases on educational websites</small>
+                            </div>
+                            <button id="securityCheck" class="demo-btn">Run Security Check</button>
+                            <div id="securityResult" class="result-box"></div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Words Learning</h3>
-                        <div class="stat-number" id="learningCount">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Daily Progress</h3>
-                        <div class="stat-number" id="dailyProgress">0%</div>
+                    
+                    <div class="word-database">
+                        <h3>Common Word Database (Educational)</h3>
+                        <div class="search-box">
+                            <input type="text" id="wordSearch" placeholder="Search educational word list...">
+                            <button id="searchBtn">Search</button>
+                        </div>
+                        <div id="wordList" class="word-list"></div>
                     </div>
                 </div>
-                <div class="progress-chart">
-                    <canvas id="progressChart"></canvas>
+            </div>
+        </section>
+
+        <section id="tools" class="tools-section">
+            <div class="container">
+                <h2>Educational Security Tools</h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <h3>Password Strength Tester</h3>
+                        <input type="password" id="passwordInput" placeholder="Test password strength">
+                        <div id="passwordStrength" class="strength-meter"></div>
+                    </div>
+                    <div class="tool-card">
+                        <h3>Security Quiz</h3>
+                        <div id="quizArea">
+                            <p>Test your cryptocurrency security knowledge</p>
+                            <button id="startQuiz" class="quiz-btn">Start Quiz</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -111,21 +119,14 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 WordMaster - Vocabulary Learning Platform</p>
+            <div class="footer-content">
+                <p><strong>Educational Purpose Only</strong></p>
+                <p>This website is for educational demonstrations of cryptocurrency security concepts.</p>
+                <p>Never share real seed phrases or private keys on any website.</p>
+                <p class="disclaimer">Always verify official sources and use hardware wallets for significant holdings.</p>
+            </div>
         </div>
     </footer>
-
-    <!-- Word Detail Modal -->
-    <div id="wordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3 id="modalWordTitle">Word</h3>
-            <div id="modalWordContent">
-                <!-- Word details will be loaded here -->
-            </div>
-            <button id="markLearned" class="action-btn">Mark as Learned</button>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
